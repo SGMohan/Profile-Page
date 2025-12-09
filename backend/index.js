@@ -19,16 +19,16 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/auth", authRouter);
-app.use("/profile", profileRouter);
-
-// Start the server
-app.listen(port, process.env.HOSTNAME, () => {
-  console.log(`http://${process.env.HOSTNAME}:${process.env.PORT}`);
-});
-
 app.get("/", (_, res) => {
   return res.status(200).json({
     message: "Welcome to the Profile Page",
   });
+});
+
+app.use("/auth", authRouter);
+app.use("/profile", profileRouter);
+
+// Start the server
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });

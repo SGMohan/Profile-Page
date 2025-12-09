@@ -4,7 +4,7 @@ import axios from "axios";
 import logo from "../assets/logo.svg";
 import arrow_icon from "../assets/arrow_icon.svg";
 
-const API_URL = import.meta.env.VITE_BACKEND_URL || "https://profile-page-a95r.onrender.com";
+const API_URL = import.meta.env.VITE_BACKEND_URL
 
 const AppHeader = () => {
   const navigate = useNavigate();

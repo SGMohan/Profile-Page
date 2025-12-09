@@ -3,7 +3,7 @@ import axios from "axios";
 import header_img from "../assets/header_img.svg";
 import hand_wave from "../assets/hand_wave.svg";
 
-const API_URL = import.meta.env.VITE_BACKEND_URL || "https://profile-page-a95r.onrender.com";
+const API_URL = import.meta.env.VITE_BACKEND_URL
 
 const HeaderContent = () => {
   const storedUser = localStorage.getItem("user");

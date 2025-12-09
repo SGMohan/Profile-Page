@@ -7,7 +7,7 @@ import mail_icon from "../assets/mail_icon.svg";
 import lock_icon from "../assets/lock_icon.svg";
 import Loading from "../components/Loading";
 
-const API_URL = import.meta.env.VITE_BACKEND_URL
+const API_URL = process.env.VITE_BACKEND_URL
 
 const Login = () => {
   const [email, setEmail] = useState("");

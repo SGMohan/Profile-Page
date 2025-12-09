@@ -7,7 +7,7 @@ import person_icon from "../assets/person_icon.svg";
 import mail_icon from "../assets/mail_icon.svg";
 import Loading from "../components/Loading";
 
-const API_URL = import.meta.env.VITE_BACKEND_URL
+const API_URL = process.env.VITE_BACKEND_URL
 
 const Profile = () => {
   const navigate = useNavigate();

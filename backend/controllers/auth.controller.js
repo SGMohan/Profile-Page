@@ -2,6 +2,7 @@ const UserModel = require("../model/user.model");
 const ProfileModel = require("../model/profile.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { client } = require("../config/redis");
 
 // Register
 const register = async (req, res) => {
@@ -77,6 +78,17 @@ const login = async (req, res) => {
       expiresIn: process.env.JWT_EXPIRES,
     });
 
+    // Store session in Redis
+    const sessionData = {
+      userId: user._id,
+      name: user.name,
+      email: user.email,
+      loginTime: new Date().toISOString()
+    };
+    
+    await client.setEx(`session:${user._id}`, 86400, JSON.stringify(sessionData)); // 24 hours
+    req.session.userId = user._id;
+
     let profile = await ProfileModel.findOne({ userId: user._id });
     if (!profile) {
       await ProfileModel.create({ userId: user._id });
@@ -103,6 +115,18 @@ const login = async (req, res) => {
 // Logout
 const logout = async (req, res) => {
   try {
+    const userId = req.user?.id || req.session?.userId;
+    
+    if (userId) {
+      // Remove session from Redis
+      await client.del(`session:${userId}`);
+      
+      // Destroy Express session
+      req.session.destroy((err) => {
+        if (err) console.error('Session destroy error:', err);
+      });
+    }
+    
     return res.status(200).json({
       message: "Logged out successfully",
       success: true,

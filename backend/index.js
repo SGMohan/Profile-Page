@@ -1,6 +1,9 @@
 const express = require('express');
 const cors = require('cors');
+const session = require('express-session');
+const RedisStore = require('connect-redis').default;
 const connectDB = require('./config/db');
+const { client, connectRedis } = require('./config/redis');
 const authRouter = require('./routes/auth.route');
 const profileRouter = require('./routes/profile.route');
 require('dotenv').config();
@@ -8,6 +11,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 connectDB();
+connectRedis();
 
 app.use(
   cors({
@@ -15,6 +19,18 @@ app.use(
     credentials: true,
   })
 );
+
+app.use(session({
+  store: new RedisStore({ client: client }),
+  secret: process.env.SESSION_SECRET || 'fallback_secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
+}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
